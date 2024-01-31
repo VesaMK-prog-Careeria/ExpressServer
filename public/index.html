@@ -14,11 +14,30 @@
 
 
     <script>
-        document.getElementById("sisältö").innerHTML = "<h4>Ladataan herkkuja...</h4>";
-        fetch("http://localhost:3000/api/herkut")
-            .then(res => res.json())
-            .then(js => console.log(js))
+        async function fetchData() {
+        document.getElementById("sisältö").innerHTML = "<h4>Ladataan herkkuja...</h4>"
 
+        var x = `<table><thead><th>Herkun nimi</th><th>tuotekoodi</th></thead><tbody>`
+
+            try {
+                const response = await fetch("http://localhost:3000/api/herkut") //haetaan herkut
+                const herkkudata = await response.json() //muutetaan json javascriptiksi
+
+                await herkkudata.map(h => { //loopataan läpi oliot map funktiolla, h on 1 herkku
+                    x += `<tr><td>${h.name}</td><td>${h.id}</td></tr>`
+                })
+
+                // taulukko päätetään ja renderöidään html elementtiin
+                x += `</tbody></table>`
+                document.getElementById("sisältö").innerHTML = x
+
+                //virheenkäsittely
+            } catch (error) {
+                console.error("Virhe herkkuja ladattaessa: ", error)
+                //document.getElementById("sisältö").innerHTML = "<h4>Virhe herkkuja ladattaessa...</h4>"
+            }
+            }
+        fetchData()
     </script>
 </body>
 </html>
