@@ -3,17 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Herkut</title>
 </head>
 <body>
     <center>
-        <h1>Hello from node & express server!</h1>
+        <div id="pin-div">
+            <input id="pin" placeholder="pin code" type="password" />
+            <button onclick="checkPin()">LOGIN</button>
+        </div>
 
-        <div id="sisältö"></div>
+            <!-- <h1>Herkuista tykkäävät</h1>
+            <p>Herkuista tykkäävät kaikki, mutta erityisesti <b>minä</b>!</p>  -->
+
+        <h1 class="hidden">Hello from node & express server!</h1>
+
+        <div class="hidden" id="sisältö"></div>
     </center>
 
 
     <script>
+        // tarkistetaan pin koodi
+        async function checkPin() {
+        var pin = document.getElementById("pin").value
+        const response = await fetch("http://localhost:3000/api/getpin")
+        const correctPin = await response.json()
+
+        if (pin == correctPin) {
+        var hiddenElements = document.getElementsByClassName("hidden")
+
+        for (i=0; i<hiddenElements.length; i++) {
+        hiddenElements[i].style.visibility = "visible"
+            
+        document.getElementById("pin-div").style.display = "hidden"
+        }
+        }
+        else {
+            alert("Väärä pin koodi!")
+            }
+        }
+
+        // dataa haetaan vain jos pin koodi on oikein
         async function fetchData() {
         document.getElementById("sisältö").innerHTML = "<h4>Ladataan herkkuja...</h4>"
 
